@@ -214,3 +214,90 @@ mount /dev/sda2 /boot
 
 Now, this is your actual system-to-be!
 
+## Syncing
+
+Now, while we still have an internet connection, we need to sync with the rest of the web.
+
+```
+emerge-webrsync
+```
+
+Now, let's sync `emerge`, Gentoo's package manager.
+```
+emerge --sync --quiet
+```
+
+... for slow terminals/devices, or...
+
+```
+emerge --sync
+```
+
+This will take some time, but don't worry - it's syncing information about every single application/package that's available on Gentoo!
+
+## Reading the news
+
+You may have noticed a message prompting you about news. It's generally recommended to read through the news, in case there is an important piece of information.
+
+```
+eselect news list
+```
+
+Read a specific piece of news:
+```
+eselect news read 1
+```
+
+Read all of the content:
+```
+eselect news read
+```
+
+Delete your news items:
+```
+eselect news purge
+```
+
+## Setting a `profile`
+Profiles are the building blocks of your Gentoo system.
+
+```
+eselect profile list
+```
+
+Here, we will be selecting the raw desktop profile - this gives us access to installing any graphical Desktop Environment or Window Manager later on.
+
+The magic number we need at the moment is in that list. You want to choose the newest version number (for us, 17.1). Now, find the line that says this:
+
+```
+[##]  default/linux/amd64/17.1/desktop
+```
+
+If you have a newer version number than `17.1`, use that. Now, our magic number is the number in `[##]`.
+
+Now, we select what we want:
+```
+eselect profile set {magic number}
+```
+
+In our case, (maybe not yours), `20`:
+```
+eselect profile set 20
+```
+
+Make sure this number is correct!
+
+```
+eselect profile list
+```
+
+And there should be a blue asterisk beside the profile you chose.
+
+## Updating @world
+```
+emerge --ask --verbose --update --deep --newuse @world
+```
+
+You'll be asked if you want to proceed - press `y` then enter, or just immediately `enter` - they do the same thing!
+
+This will take quit a while, so sit back! You're re-compiling every package that you have installed!
