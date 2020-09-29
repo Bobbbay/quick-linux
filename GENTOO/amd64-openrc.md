@@ -152,3 +152,65 @@ Now, let's 'unzip' the file we just got:
 ```
 tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
 ```
+## Configuration
+Now, we need to configure `portage`, which manages your packages/apps.
+
+```
+nano /mnt/gentoo/etc/portage/make.conf
+```
+
+Will open a text editor to the configuration file.
+
+Modify the following line:
+```
+COMMON_FLAGS="-march=native -O2 -pipe"
+```
+
+And add the following line:
+```
+MAKEOPTS="-j2"
+```
+**Replacing** the `2` with your RAM divided by 2. For example, if I have 8GB of RAM, write `-j4`.
+
+**Now, save and quit** by pressing `Ctrl+S` and `Ctrl+X`.
+
+## Grabbing the mirrors
+
+Run the following to select mirrors. It will open a visual box. Press space to select mirrors in countries near you - 5-10 is generally enough. Quick tip: select mirrors with `https` or `rsync` more to have a more "secure" connection.
+
+```
+mirrorselect -i -o >> /mnt/gentoo/etc/portage/make.conf
+```
+
+Once you're done, press `Enter`. You'll be taken out of the visual box and back to the terminal (see the bottom of the screen).
+
+## Grabbing the repository
+
+```
+mkdir --parents /mnt/gentoo/etc/portage/repos.conf
+cp /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
+```
+
+## Touchups
+A small bit remains before running the `chroot` command.
+
+```
+cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
+mount --types proc /proc /mnt/gentoo/proc
+mount --rbind /sys /mnt/gentoo/sys
+mount --make-rslave /mnt/gentoo/sys
+mount --rbind /dev /mnt/gentoo/dev
+mount --make-rslave /mnt/gentoo/dev
+```
+
+
+## Entering the `chroot` environment
+```
+chroot /mnt/gentoo /bin/bash
+source /etc/profile
+export PS1="(chroot) ${PS1}"
+mount /dev/sda2 /boot
+```
+
+Now, this is your actual system-to-be!
+
