@@ -301,3 +301,28 @@ emerge --ask --verbose --update --deep --newuse @world
 You'll be asked if you want to proceed - press `y` then enter, or just immediately `enter` - they do the same thing!
 
 This will take quit a while, so sit back! You're re-compiling every package that you have installed!
+
+## Setting a timezone
+All done updating `@world`? Now, let's set a timezone.
+
+```
+ls /usr/share/zoneinfo
+```
+
+Will output all available timezones.
+
+To get more in-depth, you can keep going, for example:
+
+```
+ls /usr/share/zoneinfo/Canada
+```
+
+Will give us all of the available timezones in Canada!
+
+Once you know which one you're using, run the following command:
+
+```
+echo "Canada/Eastern" > /etc/timezone
+```
+
+Obviously replacing "Canada/Eastern" with your timezone.
