@@ -146,3 +146,9 @@ Now, type:
 wget <LINK YOU COPIED>
 ```
 
+Validating your files is currently not supported in this guide, so check out [the official instructions](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Stage#Verifying_and_validating) if you'd like to do it (optional).
+
+Now, let's 'unzip' the file we just got:
+```
+tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
+```
