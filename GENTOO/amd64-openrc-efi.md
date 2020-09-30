@@ -326,3 +326,77 @@ echo "Canada/Eastern" > /etc/timezone
 ```
 
 Obviously replacing "Canada/Eastern" with your timezone.
+
+
+And to update the time based on what you chose:
+```
+emerge --config sys-libs/timezone-data
+```
+
+## Updating locales
+
+Run
+```
+nano -w /etc/locale.gen
+```
+
+That will open up a text editor for your locales. Add the following at the top of the file to enable English locales:
+```
+en_US ISO-8859-1
+en_US.UTF-8 UTF-8
+```
+
+It's recommended to always have at least one UTF-8 locale. Also, it's best to keep the `C` locale.
+
+You can add more locales, if you want. Just add the following under what you just wrote:
+```
+de_DE ISO-8859-1
+de_DE.UTF-8 UTF-8
+```
+Will add German locales.
+
+Once you're done, `Ctrl+S` and `Ctrl+X`. Then, run:
+
+```
+locale-gen
+```
+
+Will output:
+
+```
+ * Generating 6 locales (this might take a while) with 2 jobs        [ ok ]
+ * (2/5) Generating en_US.ISO-8859-1 ...                             [ ok ]
+ * etc etc
+ * Generation complete
+ * Adding locales to archive...                                      [ ok ]
+```
+
+Make sure all of the locales you wrote are mentioned in that output - if they're not, head back to `nano -w /etc/locale.gen` and make sure you saved the file.
+
+Now, let's select a system-wide locale. Run:
+```
+eselect locale list
+```
+
+For a list of locales you have available. 
+
+Once you've decided which locale you'd like to use, run:
+```
+eselect locale set 6
+```
+
+For us, the 6th was `en_US.utf8`.
+
+And finally, reload the environment for your changes to take affect:
+
+```
+env-update && source /etc/profile && export PS1="(chroot) ${PS1}"
+```
+
+You might not even feel a difference!
+
+## Installing the Gentoo sources
+
+```
+emerge --ask sys-kernel/gentoo-sources
+```
