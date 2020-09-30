@@ -428,3 +428,84 @@ genkernel all
 ```
 
 This will automatically generate the kernel for you. It might take a bit, so feel free to sit back.
+
+Now, note the following output:
+```
+ls /boot/vmlinu* /boot/initramfs*
+```
+
+For us, it was:
+
+```
+/boot/initramfs-5.4.66-gentoo-x86_64.img   /boot/vmlinuz-5.4.66-gentoo-x86_64  /boot/vmlinuz-5.4.66-gentoo-x86_64.old
+```
+
+Ignore anything that ends with `.old`. Now, note/remember/write down the version listed for you. For us, it was `5.4.66-gentoo-x86_64`. This is the **kernel version**.
+
+Now, let's check out your kernel modules. Run:
+
+```
+emerge --ask sys-apps/pciutils
+```
+
+That'll install `pciutils`. Now,
+```
+lspci -knn
+```
+
+You'll get a list of hardware your PC is connected to! Note the following lines:
+
+```
+Kernel river in use: <driver code>
+```
+
+Now, for each <driver code>, run the following command:
+
+```
+find /lib/modules/<kernel version>/ -type f -iname '*.o' -or -iname '*.ko' | grep <driver code>
+```
+
+**NOTE:** if you have a driver with an `_` in the name, it *might be* using a `-` (dash) in its <driver code> counterpart. For example, `xhci_hcd` *could be* `xhci-hcd`. Test with both to be sure.
+
+For example, we had 16 devices, so we would run the following 16 times:
+
+```
+find /lib/modules/5.4.66-gentoo-x86_64/ -type f -iname '*.o' -or -iname '*.ko' | grep ath9k
+```
+
+`ath9k` was just one of our codes - we had 16, so we'd replace it 16 times.
+
+Now, note the ones that give output. If there's no output, it's not interesting :).
+
+For us, the following modules gave output:
+
+```
+ath9k, r8169, xhci-hcd, ahci, lpc_ich, snd-hda-intel
+```
+
+Now, we create a file and throw the module names into that, seperated by newlines:
+```
+mkdir /etc/modules-load.d/
+nano -w /etc/modules-load.d/load.conf
+```
+
+For example, **we** would do the following:
+
+`nano -w /etc/modules-load.d/load.conf`:
+
+```
+ath9k
+r8169
+xhci-hcd
+ahci
+lpc_ich
+snd-hda-intel
+```
+
+I know, that was a huge pain. But, we're done! Now, we proceed to some more minor configuration steps, and we'll be ready to boot to our system!
+
+## Installing firmware
+
+```
+emerge --ask sys-kernel/linux-firmware
+```
