@@ -400,3 +400,31 @@ You might not even feel a difference!
 ```
 emerge --ask sys-kernel/gentoo-sources
 ```
+
+## Configuring the kernel
+
+Kernel configuration is a daunting task for many people who have not done it before - hence, we have `genkernel`, which does the hard work for you!
+
+```
+emerge --ask sys-kernel/genkernel
+```
+
+And now,
+```
+nano -w /etc/fstab
+```
+This will open up an editor for your `fstab`. You'll see a bunch of lines that start with a `#` - these are comments, and mean nothing. The file could be the same if these lines didn't exist. 
+
+Now, add the following to the end of the file:
+```
+/dev/sda2	/boot	ext2	defaults	0 2
+```
+
+We will overwrite this later, for now it's just for genkernel to see.
+
+`Ctrl+S`, `Ctrl+X`, and run:
+```
+genkernel all
+```
+
+This will automatically generate the kernel for you. It might take a bit, so feel free to sit back.
