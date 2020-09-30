@@ -507,5 +507,7 @@ I know, that was a huge pain. But, we're done! Now, we proceed to some more mino
 ## Installing firmware
 
 ```
+mkdir /etc/portage/package.license
+echo "sys-kernel/linux-firmware linux-fw-redistributable no-source-code" >> /etc/portage/package.license/linux-firmware
 emerge --ask sys-kernel/linux-firmware
 ```
