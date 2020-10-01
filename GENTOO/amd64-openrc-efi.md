@@ -537,4 +537,4 @@ If you have a CD-ROM drive, add the following as well:
 
 You can check if you do by Saving and Quitting `nano` (`Ctrl+S` and `Ctrl+X`), and running `ls /dev/cdrom`. If you get an error like "file not found", you don't - if it returns the same text, you do.
 
-Now that we've got the `fstab` sorted out, save and quit - `Ctrl+S` and `Ctrl+X`/
+Now that we've got the `fstab` sorted out, save and quit - `Ctrl+S` and `Ctrl+X`.
