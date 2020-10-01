@@ -538,3 +538,46 @@ If you have a CD-ROM drive, add the following as well:
 You can check if you do by Saving and Quitting `nano` (`Ctrl+S` and `Ctrl+X`), and running `ls /dev/cdrom`. If you get an error like "file not found", you don't - if it returns the same text, you do.
 
 Now that we've got the `fstab` sorted out, save and quit - `Ctrl+S` and `Ctrl+X`.
+
+## Networking touchups
+
+Let's set your `hostname`. This is a simple name that allows you to be recognized among a network. If you can't pick a `hostname`, `tux` is the recommended default. 
+
+```
+nano -w /etc/conf.d/hostname
+```
+
+Will open up a file that says:
+
+```
+# Set to the hostname of this machine
+hostname="localhost"
+```
+
+Let's change it to `tux`. Remember - you can change this anytime post-installation!
+
+```
+# Set to the hostname of this machine
+hostname="tux"
+```
+
+Save and quit - `Ctrl+S` and `Ctrl+X`
+
+Now, let's get rid of some text that we don't need:
+```
+nano -w /etc/issue
+```
+
+Will open up
+
+```
+This is \n.\O (\s \m \r) \t
+```
+
+Delete the `.\O`, so that we have the following:
+
+```
+This is \n (\s \m \r) \t
+```
+
+Save and quit again.
