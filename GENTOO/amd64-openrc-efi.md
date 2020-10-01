@@ -109,7 +109,7 @@ quit
 
 Time to format! We'll use `ext*` formats in this tutorial. Also, we'll activer our `swap` storage partition.
 ```
-mkfs.ext2 /dev/sda2
+mkfs.vfat -F32 /dev/sda2
 mkfs.ext4 /dev/sda4
 mkswap /dev/sda3
 swapon /dev/sda3
@@ -581,3 +581,132 @@ This is \n (\s \m \r) \t
 ```
 
 Save and quit again.
+
+Now, 
+```
+nano -w /etc/hosts
+```
+
+And add the following to the bottom of the file:
+
+```
+127.0.0.1     tux.homenetwork tux localhost
+```
+
+Replacing `tux` with your `hostname`.
+
+## Setting the `root` password
+
+`root` is the account that has super access. Anyone that knows the `root` password can pretty much murder your computer. Choose your password wisely!
+
+```
+passwd
+```
+
+And enter your password. And enter it again.
+
+## More configuration
+
+```
+nano -w /etc/conf.d/keymaps
+```
+
+Will open up the file for keymaps. Read through the commented lines, and change accordingly. Generally, the file needs no changes. If you're unsure what to choose, you can skip it.
+
+Now, run the following command to open up the `openrc` configuration file:
+
+```
+nano -w /etc/rc.conf
+```
+
+Generally, changes aren't needed - but if you'd like, sit through and read the beautiful commented lines.
+
+Note: this is a big file - ~315 lines. 
+
+## Installing tools
+
+```
+emerge --ask app-admin/sysklogd sys-process/cronie sys-apps/mlocate sys-fs/dosfstools net-misc/dhcpcd net-wireless/iw net-wireless/wpa_supplicant
+rc-update add sysklogd default
+rc-update add cronie default
+rc-update add wpa_supplicant default
+```
+
+In the first line, **make sure** you write all of these - for example, there are two packages that start with `net-wireless` in the end. Pay attention, we will need these later!
+
+## Configuring the bootloader
+
+```
+echo 'GRUB_PLATFORMS="efi-64"' >> /etc/portage/make.conf
+emerge --ask sys-boot/grub:2
+```
+
+It's absolutely mandatory that you run the first command before the second.
+
+Once that completes, run the following:
+
+```
+ls /boot
+```
+
+If it returns a handful of files, you're good. Some things you should see in there are `vmlinuz`, `System.map`, etc. 
+
+**If you get no output**, run the following command
+```
+mount /dev/sda2 /boot
+```
+
+And run the top command again (`ls /boot`).
+
+Now, let's install GRUB onto your disk. Run:
+
+```
+grub-install --target=x86_64-efi --efi-directory=/boot
+```
+
+If you get an error like `Could not prepare Boot variable: Read-only filesystem`, run the following:
+
+```
+mount -o remount,rw /sys/firmware/efi/efivars
+```
+
+And rerun the `grub-install` command again.
+
+Now, we run the `mkconfig` command to create the configuration:
+
+```
+emerge --ask sys-boot/os-prober
+```
+
+You will be prompted to make USE changes. Don't worry - say yes. Then, run:
+
+```
+dispatch-conf
+```
+
+**And press** `u` when prompted. 
+
+Now, rerun the `emerge` command:
+
+```
+emerge --ask sys-boot/os-prober
+```
+
+Now, run:
+
+```
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+## Rebooting the system - because you're done!
+
+```
+exit
+cd
+cp /etc/wpa_supplicant/wpa_supplicant.conf /mnt/gentoo/etc/wpa_supplicant/
+umount -l /mnt/gentoo/dev{/shm,/pts,}
+umount -R /mnt/gentoo
+reboot
+```
+
+When it startes rebooting, safely unplug your boot USB.
