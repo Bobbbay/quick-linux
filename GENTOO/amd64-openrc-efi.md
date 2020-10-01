@@ -710,3 +710,38 @@ reboot
 ```
 
 When it startes rebooting, safely unplug your boot USB.
+
+Boom, you're in - congrats, you just installed Gentoo Linux!
+
+## Post installation
+
+Sign in with the user of `root`, you set the password earlier on.
+
+Now, run the following, replacing `bobbbay` with the name of the user you'd like to add:
+
+```
+useradd -m -G users,wheel,audio -s /bin/bash bobbbay
+```
+
+Then, run:
+
+```
+passwd bobbbay
+```
+
+Obviously replacing `bobbbay` with your username. This will set a new password for the user. 
+
+Now, run the following:
+
+```
+rm -v /stage3-*.tar.*
+```
+
+This is just clean-up. 
+
+And finally, let's grab `xorg` (not needed if you don't want a graphical environment):
+```
+emerge --ask x11-base/xorg-server
+```
+
+And, you're ready! Now, proceed to install a Graphical Desktop with the instructions given to you by your choice. You *could* remain in complete terminal as well.
