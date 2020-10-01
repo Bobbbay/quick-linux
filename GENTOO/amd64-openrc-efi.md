@@ -511,3 +511,30 @@ mkdir /etc/portage/package.license
 echo "sys-kernel/linux-firmware linux-fw-redistributable no-source-code" >> /etc/portage/package.license/linux-firmware
 emerge --ask sys-kernel/linux-firmware
 ```
+
+## Setting up your `fstab`
+
+You may or may not remember that we modified a file named `fstab` once, for `genkernel`. Now, let's modify it again, for real this time. Open up `/etc/fstab`:
+
+```
+nano -w /etc/fstab
+```
+
+And change the file so it looks like so:
+
+```
+/dev/sda2   /boot        ext2    defaults,noatime     0 2
+/dev/sda3   none         swap    sw                   0 0
+/dev/sda4   /            ext4    noatime              0 1
+```
+
+Again, lines that start with a `#` don't matter - no need to delete or change them.
+
+If you have a CD-ROM drive, add the following as well:
+```
+/dev/cdrom  /mnt/cdrom   auto    noauto,user          0 0
+```
+
+You can check if you do by Saving and Quitting `nano` (`Ctrl+S` and `Ctrl+X`), and running `ls /dev/cdrom`. If you get an error like "file not found", you don't - if it returns the same text, you do.
+
+Now that we've got the `fstab` sorted out, save and quit - `Ctrl+S` and `Ctrl+X`/
