@@ -403,44 +403,49 @@ emerge --ask sys-kernel/gentoo-sources
 
 ## Configuring the kernel
 
-Kernel configuration is a daunting task for many people who have not done it before - hence, we have `genkernel`, which does the hard work for you!
-
 ```
-emerge --ask sys-kernel/genkernel
+emerge --ask sys-kernel/installkernel-gentoo
 ```
 
-And now,
-```
-nano -w /etc/fstab
-```
-This will open up an editor for your `fstab`. You'll see a bunch of lines that start with a `#` - these are comments, and mean nothing. The file could be the same if these lines didn't exist. 
+Now, let's make a choice - do you want to install the kernel from source or not? From-source means a slower compilation, but you get more customizablity when needed. From-binary means you get *way* speedier compile time, but less kernel customization. This guide covers both!
 
-Now, add the following to the end of the file:
-```
-/dev/sda2	/boot	ext2	defaults	0 2
-```
-
-We will overwrite this later, for now it's just for genkernel to see.
-
-`Ctrl+S`, `Ctrl+X`, and run:
-```
-genkernel all
-```
-
-This will automatically generate the kernel for you. It might take a bit, so feel free to sit back.
-
-Now, note the following output:
-```
-ls /boot/vmlinu* /boot/initramfs*
-```
-
-For us, it was:
+#### From-source
 
 ```
-/boot/initramfs-5.4.66-gentoo-x86_64.img   /boot/vmlinuz-5.4.66-gentoo-x86_64  /boot/vmlinuz-5.4.66-gentoo-x86_64.old
+emerge --ask sys-kernel/gentoo-kernel
 ```
 
-Ignore anything that ends with `.old`. Now, note/remember/write down the version listed for you. For us, it was `5.4.66-gentoo-x86_64`. This is the **kernel version**.
+#### From-binary (not from-source)
+
+```
+emerge --ask sys-kernel/gentoo-kernel-bin
+```
+
+### Kernel fixes
+
+Now that we have a kernel, either from-source or from-binary, we need to update the modules. This does take a while though!
+
+```
+emerge --ask @module-rebuild
+```
+
+When that's over, we need to update the kernel:
+
+#### I used from-source
+
+```
+emerge --config sys-kernel/gentoo-kernel
+```
+
+#### I used from-binary
+
+```
+emerge --config sys-kernel/gentoo-kernel-bin
+```
+ 
+And we're done! The magic of this is that now when we ask Gentoo to update the system, it'll update the kernel too - everything is smooth sailing!
+
+### Kernel modules
 
 Now, let's check out your kernel modules. Run:
 
